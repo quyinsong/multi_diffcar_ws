@@ -1,3 +1,14 @@
 # multi_diffcar_ws  
 基于ROS实现多差速无人车编队控制  
 # 1 拷贝源码与编译  
+git clone https://github.com/quyinsong/multi_diffcar_ws.git  
+cd multi_diffcar_ws  
+catkin_make  
+source devel/setup.bash  
+
+# 2 运行代码  
+运行多机器人仿真环境（gazebo与rviz）：roslaunch mydiffcar_gazebo multi_diffcar_gazebo.launch  
+运行编队控制器：roslaunch nmpc_ctr test_formation.launch  
+
+# 3 rviz为领航车发布2D nav goal  
+
