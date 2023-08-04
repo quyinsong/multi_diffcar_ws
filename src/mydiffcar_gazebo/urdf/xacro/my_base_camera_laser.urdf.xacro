@@ -1,0 +1,14 @@
+<!-- 组合小车底盘与摄像头 -->
+<robot name="my_car_camera" xmlns:xacro="http://wiki.ros.org/xacro">
+    <xacro:include filename="my_head.urdf.xacro" />
+    <xacro:include filename="my_base.urdf.xacro" />
+    <xacro:include filename="my_camera.urdf.xacro" />
+    <xacro:include filename="my_laser.urdf.xacro" />
+    <xacro:include filename="my_move.urdf.xacro" />
+    <!-- 雷达仿真的 xacro 文件 -->
+    <xacro:include filename="my_sensors_laser.urdf.xacro" />
+    <!-- 摄像头仿真的 xacro 文件 -->
+    <xacro:include filename="my_sensors_camara.urdf.xacro" />
+    <!-- kinect仿真的 xacro 文件 -->
+    <xacro:include filename="my_sensors_kinect.urdf.xacro" />
+</robot>

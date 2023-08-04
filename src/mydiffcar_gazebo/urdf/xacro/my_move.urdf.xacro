@@ -1,0 +1,61 @@
+<robot name="my_car_move" xmlns:xacro="http://wiki.ros.org/xacro">
+
+    <!-- 机器人命名空间，主要用于多机器人仿真时为控制命令加上命名空间属性，方便单个机器人控制 -->
+    <xacro:property name="ns" value="$(arg ns)" /> <!-- 机器人命名空间  -->
+    <!-- 传动实现:用于连接控制器与关节 -->
+    <xacro:macro name="joint_trans" params="joint_name">
+        <!-- Transmission is important to link the joints and the controller -->
+        <transmission name="${joint_name}_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${joint_name}">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${joint_name}_motor">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+
+    <!-- 每一个驱动轮都需要配置传动装置 -->
+    <xacro:joint_trans joint_name="${ns}_left_wheel2base_link" />
+    <xacro:joint_trans joint_name="${ns}_right_wheel2base_link" />
+
+    <!-- 控制器 -->
+    <gazebo>
+        <!-- 差分小车控制插件 -->
+        <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+            <rosDebugLevel>Debug</rosDebugLevel>
+            <publishWheelTF>true</publishWheelTF>
+            <robotNamespace>${ns}</robotNamespace>
+            <publishTf>1</publishTf>
+            <publishWheelJointState>true</publishWheelJointState>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>100.0</updateRate>
+            <legacyMode>true</legacyMode>
+            <leftJoint>${ns}_left_wheel2base_link</leftJoint> <!-- 左轮 -->
+            <rightJoint>${ns}_right_wheel2base_link</rightJoint> <!-- 右轮 -->
+            <wheelSeparation>${base_link_radius * 2}</wheelSeparation> <!-- 车轮间距 -->
+            <wheelDiameter>${wheel_radius * 2}</wheelDiameter> <!-- 车轮直径 -->
+            <broadcastTF>1</broadcastTF>
+            <wheelTorque>30</wheelTorque>
+            <wheelAcceleration>1.8</wheelAcceleration>
+            <commandTopic>cmd_vel</commandTopic> <!-- 运动控制话题 -->
+            <odometryFrame>${ns}_odom</odometryFrame> 
+            <odometryTopic>odom</odometryTopic> <!-- 里程计话题 -->
+            <robotBaseFrame>${ns}_base_footprint</robotBaseFrame> <!-- 根坐标系 -->
+        </plugin>
+        <!-- 获取世界坐标系下小车位置真值插件 -->
+        <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>50.0</updateRate>
+            <bodyName>${ns}_base_footprint</bodyName>
+            <topicName>base_pose_truth</topicName>
+            <gaussianNoise>0.01</gaussianNoise>
+            <frameName>world</frameName>
+            <xyzOffsets>0 0 0</xyzOffsets>
+            <rpyOffsets>0 0 0</rpyOffsets>
+        </plugin>
+    </gazebo>
+
+</robot>

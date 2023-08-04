@@ -1,0 +1,10 @@
+<launch>
+
+    <!-- 启动nmpc控制器 -->
+    <node pkg="nmpc_ctr" type="test_nmpc_ctr_1" name="test_nmpc_ctr_1" />
+    <!-- 启动nmpc控制器 -->
+    <node pkg="nmpc_ctr" type="formation_ctr_2" name="formation_ctr_2" />
+    <!-- 启动nmpc控制器 -->
+    <node pkg="nmpc_ctr" type="formation_ctr_3" name="formation_ctr_3" />
+
+</launch>

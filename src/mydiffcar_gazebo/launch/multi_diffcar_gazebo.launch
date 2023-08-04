@@ -1,0 +1,62 @@
+<launch>
+
+    <!-- 启动 gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <!-- <arg name="world_name" value="$(find mydiffcar_gazebo)/worlds/my_world.world" /> -->
+    </include>
+
+    <!-- Map server -->
+    <!-- <arg name="map_file" default="$(find mydiffcar_gazebo)/map/nav.yaml"/>
+    <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/> -->
+
+    <!-- 第1个机器人 -->
+    <group ns="robot1">
+        <!-- 将模型文件写入参数服务器 -->
+        <param name="robot_description" command="$(find xacro)/xacro $(find mydiffcar_gazebo)/urdf/xacro/my_base_camera_laser.urdf.xacro ns:=robot1" />
+        <!-- 在 gazebo 中显示机器人模型 -->
+        <node pkg="gazebo_ros" type="spawn_model" name="robot1" args="-urdf -model robot1 -param robot_description -x 0.5"></node> 
+        <!-- 关节以及机器人状态发布节点 -->
+        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node>
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+        <!-- 坐标系变换，这个是跟着赵老师敲的，用来在rviz中正常显示深度相机点云数据 -->
+        <node pkg="tf2_ros" type="static_transform_publisher" name="static_transform_publisher" args="0 0 0 -1.57 0 -1.57 /robot1_support /robot1_support_depth" />
+        <!-- 设置一个全局坐标系map，这是rviz中显示多机器人的关键，将map坐标系作为机器人的odom坐标系的父亲，使得三个机器人能正常在rviz中显示 -->
+        <node pkg="tf2_ros" type="static_transform_publisher" name="static_transform_publisher1" args="0 0 0 0 0 0 /map /robot1_odom" />
+    </group>
+
+    <!-- 第2个机器人 -->
+    <group ns="robot2">
+        <!-- 将模型文件写入参数服务器 -->
+        <param name="robot_description" command="$(find xacro)/xacro $(find mydiffcar_gazebo)/urdf/xacro/my_base_camera_laser.urdf.xacro ns:=robot2" />
+        <!-- 在 gazebo 中显示机器人模型 -->
+        <node pkg="gazebo_ros" type="spawn_model" name="robot2" args="-urdf -model robot2 -param robot_description -x 1"></node> 
+        <!-- 关节以及机器人状态发布节点 -->
+        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node>
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+        <!-- 坐标系变换 -->
+        <node pkg="tf2_ros" type="static_transform_publisher" name="static_transform_publisher" args="0 0 0 -1.57 0 -1.57 /robot2_support /robot2_support_depth" />
+        <node pkg="tf2_ros" type="static_transform_publisher" name="static_transform_publisher1" args="0 0 0 0 0 0 /map /robot2_odom" />
+    </group>
+
+    <!-- 第3个机器人 -->
+    <group ns="robot3">
+
+        <!-- 将模型文件写入参数服务器 -->
+        <param name="robot_description" command="$(find xacro)/xacro $(find mydiffcar_gazebo)/urdf/xacro/my_base_camera_laser.urdf.xacro ns:=robot3" />
+        <!-- 在 gazebo 中显示机器人模型 -->
+        <node pkg="gazebo_ros" type="spawn_model" name="robot3" args="-urdf -model robot3 -param robot_description -x 1.5"></node> 
+        <!-- 关节以及机器人状态发布节点 -->
+        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node>
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+        <!-- 坐标系变换 -->
+        <node pkg="tf2_ros" type="static_transform_publisher" name="static_transform_publisher" args="0 0 0 -1.57 0 -1.57 /robot3_support /robot3_support_depth" />
+        <node pkg="tf2_ros" type="static_transform_publisher" name="static_transform_publisher1" args="0 0 0 0 0 0 /map /robot3_odom" />
+    </group>
+
+    <!-- 启动 rviz -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find mydiffcar_gazebo)/config/multi_diffcar.rviz" />
+    <!-- <node pkg="rviz" type="rviz" name="rviz" /> -->
+</launch>

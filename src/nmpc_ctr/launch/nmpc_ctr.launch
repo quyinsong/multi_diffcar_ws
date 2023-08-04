@@ -1,0 +1,6 @@
+<launch>
+
+    <!-- 启动nmpc控制器 -->
+    <node pkg="nmpc_ctr" type="test_nmpc_ctr_1" name="test_nmpc_ctr_1" />
+
+</launch>
