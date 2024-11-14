@@ -16,4 +16,7 @@ source devel/setup.bash
 
 # 4 rviz为领航车发布2D nav goal  
 
+![image](https://github.com/user-attachments/assets/2c6c5c29-bf1a-41a6-a9c9-c9d4be99b9a3)
+
+
 
