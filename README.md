@@ -18,5 +18,5 @@ source devel/setup.bash
 
 ![image](https://github.com/user-attachments/assets/2c6c5c29-bf1a-41a6-a9c9-c9d4be99b9a3)
 
-
-
+# 问题
+MPC没有加入障碍物约束，因此不能实现避障功能
